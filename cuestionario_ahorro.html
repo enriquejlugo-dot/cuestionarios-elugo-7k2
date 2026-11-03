@@ -1,0 +1,419 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="claude:viewport-fit-sides" content="cover">
+<title>Cuestionario de Ahorro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Composición: una columna estrecha para el móvil; cabecera con la marca de la empresa, blanco y rojo; barra de progreso fija arriba. */
+:root {
+  color-scheme: light;
+  --bg: #ffffff; --surface: #ffffff; --fg: #231a1b; --fg2: #6a5a5c; --line: #e3d6d7; --wash: #f8f1f1;
+  --accent: #c4161c; --accent-fg: #ffffff; --accent-soft: #fceaea; --bad: #a30f14; --good: #1d6b3a;
+  --display: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark; --bg: #1a1213; --surface: #241a1b; --fg: #f5ecec; --fg2: #c2b0b2; --line: #3d2d2f; --wash: #2c2022;
+    --accent: #ff6a6f; --accent-fg: #2a0507; --accent-soft: #3a1b1d; --bad: #ff9a9d; --good: #7fd49a;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark; --bg: #1a1213; --surface: #241a1b; --fg: #f5ecec; --fg2: #c2b0b2; --line: #3d2d2f; --wash: #2c2022;
+  --accent: #ff6a6f; --accent-fg: #2a0507; --accent-soft: #3a1b1d; --bad: #ff9a9d; --good: #7fd49a;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.5 var(--body); }
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 0 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2 { font-family: var(--display); letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: 28px; line-height: 1.15; } h2 { font-size: 21px; line-height: 1.2; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+.company { display: flex; align-items: center; gap: 12px; padding-block: 16px 14px; border-top: 5px solid var(--accent); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); }
+.company img { height: 44px; max-width: 160px; object-fit: contain; }
+.cname { font: 700 15px/1.2 var(--display); letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding: 10px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); }
+.bar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font: 600 14px/1.2 var(--display); color: var(--fg2); }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.lang button { font: 600 14px var(--body); border: 0; background: transparent; color: var(--fg2); padding: 6px 14px; min-height: 34px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); }
+.prog { margin-top: 8px; height: 6px; border-radius: 3px; background: var(--wash); overflow: hidden; }
+.prog i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
+.prog-t { font-size: 13px; color: var(--fg2); margin-top: 4px; }
+.hero { padding-block: 28px 8px; display: grid; gap: 12px; }
+.hero p { margin: 0; color: var(--fg2); max-width: 60ch; }
+.blocks { display: grid; gap: 8px; margin-top: 4px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.blocks div { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 14px; line-height: 1.35; }
+.blocks b { display: block; font: 600 15px var(--display); color: var(--accent); }
+.sec { margin-top: 36px; display: grid; gap: 18px; }
+.sec > h2 { padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+.fld { display: grid; gap: 6px; min-width: 0; }
+.fld > label, .fld > .lg { font-weight: 600; font-size: 16px; }
+.fld .opt { font-weight: 400; color: var(--fg2); font-size: 14px; }
+.hint { font-size: 14px; color: var(--fg2); margin: 0; }
+input[type=text], input[type=tel], input[type=email], input[type=date], input[type=number], select, textarea {
+  font: 17px var(--body); color: var(--fg); background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px; min-height: 48px; width: 100%; min-width: 0; }
+textarea { min-height: 88px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: 3px solid var(--accent-soft); }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices label { position: relative; }
+.choices input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.choices span { display: block; border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 10px 16px; min-height: 46px; line-height: 1.3; display: flex; align-items: center; }
+.choices input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.choices input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.fld.err input[type=text], .fld.err input[type=tel], .fld.err input[type=email], .fld.err input[type=date], .fld.err input[type=number], .fld.err select, .fld.err textarea { border-color: var(--bad); }
+.msg-err { color: var(--bad); font-size: 14px; font-weight: 600; margin: 0; }
+.consent { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 14px; }
+.consent input { width: 24px; height: 24px; margin: 2px 0 0; accent-color: var(--accent); }
+.consent.err { border-color: var(--bad); }
+.send { margin-top: 28px; display: grid; gap: 10px; }
+.btn { font: 600 17px var(--body); min-height: 50px; padding: 0 20px; border-radius: 12px; border: 1.5px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+.btn.primary { background: var(--accent); color: var(--accent-fg); }
+.btn.sm { min-height: 40px; font-size: 15px; padding: 0 14px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.status { font-size: 15px; color: var(--fg2); margin: 0; min-height: 1.4em; }
+.status.ok { color: var(--good); font-weight: 600; } .status.bad { color: var(--bad); font-weight: 600; }
+details.sum { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 10px 14px; }
+details.sum summary { cursor: pointer; font-weight: 600; }
+details.sum pre { white-space: pre-wrap; word-break: break-word; font: 14px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 10px 0 0; max-height: 360px; overflow: auto; }
+.agent { margin-top: 20px; background: var(--surface); border: 1.5px dashed var(--accent); border-radius: 12px; padding: 14px 16px; display: grid; gap: 12px; }
+.agent h2 { font-size: 18px; } .agent .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); }
+.agent .row { display: flex; flex-wrap: wrap; gap: 8px; }
+.agent input[type=text], .agent input[type=tel], .agent input[type=email], .agent select { min-height: 44px; }
+.agent code { font-size: 13px; word-break: break-all; }
+.prev-bar { background: var(--accent); color: var(--accent-fg); font-size: 14px; padding: 6px 12px; text-align: center; border-radius: 8px; margin-top: 12px; }
+.prev-bar button { font: inherit; color: inherit; background: none; border: 0; text-decoration: underline; cursor: pointer; margin-left: 8px; }
+.foot { margin-top: 40px; font-size: 13px; color: var(--fg2); text-align: center; }
+@media (max-width: 480px) { .blocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+@media (prefers-reduced-motion: reduce) { .prog i { transition: none; } }
+</style>
+</head><body>
+<div class="wrap">
+  <header class="company"><img id="logo" alt="" hidden><span class="cname" id="cname"></span></header>
+  <div class="bar" id="bar">
+    <div class="bar-row">
+      <span class="brand" id="brand"></span>
+      <div class="lang" role="group" aria-label="Idioma / Language"><button type="button" id="lES" aria-pressed="true">Español</button><button type="button" id="lEN" aria-pressed="false">English</button></div>
+    </div>
+    <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+    <div class="prog-t" id="progTxt" role="status" aria-live="polite"></div>
+  </div>
+
+  <section class="agent" id="agent" hidden>
+    <h2>Preparar el cuestionario para un cliente</h2>
+    <p class="hint" id="agentHint"></p>
+    <div class="grid">
+      <div class="fld"><label for="aName">Nombre del cliente (para el saludo)</label><input type="text" id="aName"></div>
+      <div class="fld"><label for="aTrato">Trato (en español)</label><select id="aTrato"><option value="tu">De tú</option><option value="us">De usted</option></select></div>
+      <div class="fld"><label for="aLang">Idioma inicial</label><select id="aLang"><option value="es">Español</option><option value="en">English</option></select></div>
+      <div class="fld"><label for="aSender">Quién lo envía *</label><input type="text" id="aSender" value="Enrique"></div>
+      <div class="fld"><label for="aPhone">Móvil / WhatsApp *</label><input type="tel" id="aPhone" inputmode="tel" placeholder="600 000 000"></div>
+      <div class="fld"><label for="aMail">Correo *</label><input type="email" id="aMail" placeholder="nombre@dominio.com"></div>
+    </div>
+    <div class="row">
+      <button class="btn sm primary" type="button" id="aLink">Generar enlace</button>
+      <button class="btn sm" type="button" id="aCopy">Copiar enlace</button>
+      <button class="btn sm" type="button" id="aDown">Descargar para el cliente</button>
+      <button class="btn sm" type="button" id="aPrev">Vista previa</button>
+    </div>
+    <p class="hint" id="aOut" role="status"></p>
+  </section>
+  <div class="prev-bar" id="prevBar" hidden><span id="prevTxt"></span><button type="button" id="prevExit"></button></div>
+
+  <section class="hero" id="hero"></section>
+  <form id="form" novalidate autocomplete="on"></form>
+
+  <section class="send" id="send"></section>
+  <p class="foot" id="foot"></p>
+  <p class="foot" id="legal"></p>
+</div>
+<script>
+(function () {
+'use strict';
+var COMPANY = 'E. Lugo Inversió i Mediació, S.L.U.', LOGO = ''; /*__LOGO__*/
+var SRC = '<!doctype html>\n' + document.documentElement.outerHTML;
+var $ = function (id) { return document.getElementById(id); };
+var YN = [{ v: 'no', es: 'No', en: 'No' }, { v: 'si', es: 'Sí', en: 'Yes' }];
+var YNU = YN.concat([{ v: 'ns', es: 'No lo sé', en: "I don't know" }]);
+var isYes = function (id) { return function (V) { return V[id] === 'si'; }; };
+
+// ---------- cuestionario ----------
+var SECTIONS = [
+  { es: 'Datos del tomador', en: 'Policyholder', fields: [
+    { id: 'hName', t: 'text', req: 1, ac: 'name', es: 'Nombre y apellidos', en: 'Full name' },
+    { id: 'hId', t: 'text', req: 1, es: 'DNI o NIE', en: 'ID or NIE number' },
+    { id: 'hBirth', t: 'date', req: 1, ac: 'bday', es: 'Fecha de nacimiento', en: 'Date of birth' },
+    { id: 'hPhone', t: 'tel', req: 1, ac: 'tel', es: 'Teléfono', en: 'Phone number' },
+    { id: 'hMail', t: 'email', req: 1, ac: 'email', es: 'Correo electrónico', en: 'Email' },
+    { id: 'hZip', t: 'text', req: 1, ac: 'postal-code', es: 'Código postal del domicilio', en: 'Home postal code' },
+    { id: 'hJob', t: 'text', es: 'Profesión', en: 'Occupation', opt: 1 }
+  ] },
+  { es: 'Objetivo y liquidez', en: 'Goal and liquidity', fields: [
+    { id: 'oGoal', t: 'select', req: 1, es: 'Para qué quiere ahorrar o invertir', en: 'What you want to save or invest for', o: [{ v: 'jubilacion', es: 'Complementar la jubilación', en: 'Top up retirement income' }, { v: 'hijos', es: 'Estudios o futuro de los hijos', en: "Children's education or future" }, { v: 'proyecto', es: 'Un proyecto concreto (vivienda, negocio, viaje)', en: 'A specific project (home, business, travel)' }, { v: 'rentabilizar', es: 'Rentabilizar mis ahorros', en: 'Make my savings grow' }, { v: 'herencia', es: 'Patrimonio o herencia', en: 'Wealth or inheritance' }, { v: 'ns', es: 'No lo sé, que me aconsejen', en: "I don't know, please advise" }] },
+    { id: 'oHor', t: 'select', req: 1, es: 'Liquidez que desea', en: 'Liquidity you want', hint: { es: 'Es decir, cuándo podría necesitar disponer del dinero.', en: 'That is, when you might need access to the money.' }, o: [{ v: 'inmediata', es: 'Disponer del dinero en cualquier momento', en: 'Access to the money at any time' }, { v: 'hasta 3', es: 'Puedo dejarlo hasta 3 años', en: 'I can leave it for up to 3 years' }, { v: '3 a 5', es: 'Puedo dejarlo de 3 a 5 años', en: 'I can leave it for 3 to 5 years' }, { v: '5 a 10', es: 'Puedo dejarlo de 5 a 10 años', en: 'I can leave it for 5 to 10 years' }, { v: 'más de 10', es: 'Largo plazo, más de 10 años', en: 'Long term, over 10 years' }] },
+    { id: 'oMode', t: 'radio', req: 1, es: 'Cómo piensa aportar', en: 'How you plan to contribute', o: [{ v: 'unica', es: 'Un pago único', en: 'One lump sum' }, { v: 'periodica', es: 'Aportaciones periódicas', en: 'Regular contributions' }, { v: 'ambas', es: 'Ambas', en: 'Both' }] },
+    { id: 'oLump', t: 'number', req: 1, showIf: function (V) { return V.oMode === 'unica' || V.oMode === 'ambas'; }, es: 'Importe del pago único (€)', en: 'Lump sum amount (€)' },
+    { id: 'oMonth', t: 'number', req: 1, showIf: function (V) { return V.oMode === 'periodica' || V.oMode === 'ambas'; }, es: 'Aportación mensual (€)', en: 'Monthly contribution (€)' },
+    { id: 'oLiq', t: 'radio', req: 1, es: '¿Podría necesitar este dinero de forma imprevista?', en: 'Might you need this money unexpectedly?', o: YNU },
+    { id: 'oTarget', t: 'number', es: 'Cantidad que le gustaría tener ahorrada al final (€)', en: 'Amount you would like to have saved at the end (€)', opt: 1, hint: { es: 'Una cifra aproximada nos ayuda a calcular cuánto ahorrar cada mes.', en: 'A rough figure helps us work out how much to save each month.' } }
+  ] },
+  { es: 'Situación financiera', en: 'Financial situation', fields: [
+    { id: 'fInc', t: 'select', es: 'Ingresos netos anuales aproximados', en: 'Approximate yearly net income', opt: 1, o: [{ v: 'menos de 20.000', es: 'Menos de 20.000 €', en: 'Under €20,000' }, { v: '20.000 a 40.000', es: 'De 20.000 a 40.000 €', en: '€20,000 to €40,000' }, { v: '40.000 a 80.000', es: 'De 40.000 a 80.000 €', en: '€40,000 to €80,000' }, { v: 'más de 80.000', es: 'Más de 80.000 €', en: 'Over €80,000' }] },
+    { id: 'fEmerg', t: 'radio', req: 1, es: '¿Tiene ahorros aparte equivalentes a unos 6 meses de gastos?', en: 'Do you have separate savings of about 6 months of expenses?', o: YNU },
+    { id: 'fDebt', t: 'radio', req: 1, es: '¿Tiene deudas o una hipoteca que limiten su capacidad de ahorro?', en: 'Do you have debts or a mortgage that limit your ability to save?', o: YN }
+  ] },
+  { es: 'Experiencia y riesgo', en: 'Experience and risk', fields: [
+    { id: 'eExp', t: 'check', es: 'Productos de ahorro que ha tenido', en: 'Savings products you have held', o: [{ v: 'depositos', es: 'Depósitos o cuentas', en: 'Deposits or savings accounts' }, { v: 'planes', es: 'Planes de pensiones', en: 'Pension plans' }, { v: 'fondos', es: 'Fondos de inversión', en: 'Investment funds' }, { v: 'acciones', es: 'Acciones o bolsa', en: 'Shares or stock market' }, { v: 'seguros ahorro', es: 'Seguros de ahorro', en: 'Savings insurance' }, { v: 'ninguno', es: 'Ninguno', en: 'None' }] },
+    { id: 'eKnow', t: 'select', req: 1, es: 'Cómo valora sus conocimientos financieros', en: 'How you rate your financial knowledge', o: [{ v: 'bajo', es: 'Bajos', en: 'Low' }, { v: 'medio', es: 'Medios', en: 'Medium' }, { v: 'alto', es: 'Altos', en: 'High' }] },
+    { id: 'rBase', t: 'radio', req: 1, es: 'Para crear una base de ahorro a medio plazo, ¿qué le importa más?', en: 'To build a medium-term savings base, what matters most to you?', o: [{ v: 'capital', es: 'Conservar lo ahorrado, aunque crezca poco', en: 'Keeping what I save, even if it grows little' }, { v: 'estable', es: 'Que crezca de forma estable y previsible', en: 'Steady, predictable growth' }, { v: 'crecer', es: 'Que crezca más, aceptando algunos altibajos', en: 'More growth, accepting some ups and downs' }] },
+    { id: 'rProf', t: 'radio', req: 1, es: 'Qué prefiere', en: 'What you prefer', o: [{ v: 'conservador', es: 'Seguridad, aunque rinda poco', en: 'Safety, even if returns are low' }, { v: 'moderado', es: 'Equilibrio entre seguridad y rentabilidad', en: 'A balance of safety and return' }, { v: 'dinamico', es: 'Más rentabilidad, aceptando altibajos', en: 'Higher return, accepting ups and downs' }] },
+    { id: 'pCur', t: 'textarea', es: 'Planes, fondos o seguros de ahorro que ya tiene', en: 'Plans, funds or savings insurance you already hold', opt: 1 }
+  ] },
+  { es: 'Observaciones', en: 'Notes', fields: [
+    { id: 'notes', t: 'textarea', es: 'Algo más que debamos saber', en: 'Anything else we should know' }
+  ] }
+];
+
+// ---------- textos de la interfaz ----------
+var UI = {
+  es: {
+    brand: function (c) { return 'Ahorro e inversión · ' + (c.s || 'Cuestionario'); },
+    title: 'Cuestionario para la propuesta de ahorro e inversión',
+    hi: function (c) { return c.n ? 'Hola, ' + c.n + '.' : 'Hola.'; },
+    intro: function (c) { return c.tr === 'us' ? 'Para preparar su propuesta necesito algunos datos sobre sus objetivos de ahorro. Le llevará unos 10 minutos. Si no sabe algo, déjelo en blanco y lo vemos juntos.' : 'Para preparar tu propuesta necesito algunos datos sobre tus objetivos de ahorro. Te llevará unos 10 minutos. Si no sabes algo, déjalo en blanco y lo vemos juntos.'; },
+    cont: ['Objetivo', 'Para qué quiere ahorrar o invertir.'], cont2: ['Liquidez', 'Cuándo puede necesitar el dinero.'], cont3: ['Riesgo', 'Cuánta variación del valor tolera.'],
+    prog: function (a, b) { return a + ' de ' + b + ' datos obligatorios'; }, req: 'Este dato es necesario.', optTag: '(opcional)', choose: 'Elegir…',
+    consent: function (c) { return 'Acepto que ' + COMPANY + ' use estos datos para preparar mi propuesta de ahorro e inversión. Puedo pedir que se borren en cualquier momento.'; },
+    consentErr: 'Marque la casilla para poder enviar.', sendH: 'Enviar las respuestas', sendNote: function (c) { return c.tr === 'us' ? 'Al pulsar se abrirá un mensaje con sus respuestas. Solo tiene que enviarlo.' : 'Al pulsar se abrirá un mensaje con tus respuestas. Solo tienes que enviarlo.'; },
+    wa: 'Enviar por WhatsApp', mail: 'Enviar por correo', copy: 'Copiar el resumen', copied: 'Resumen copiado. Péguelo en el chat o en un correo.', copyFail: 'No se pudo copiar. Seleccione el texto del resumen y cópielo a mano.',
+    sumH: 'Ver el resumen que se enviará', missing: function (n) { return 'Faltan ' + n + ' datos obligatorios. Los hemos marcado en rojo.'; }, opened: 'Se ha abierto el mensaje. Si no ve nada, use «Copiar el resumen».',
+    foot: function (c) { return c.p || c.e ? 'Contacto: ' + [c.s, c.p, c.e].filter(Boolean).join(' · ') : ''; },
+    prevTxt: 'Vista previa: así lo verá el cliente.', prevExit: 'Volver al panel'
+  },
+  en: {
+    brand: function (c) { return 'Savings and investment · ' + (c.s || 'Questionnaire'); },
+    title: 'Savings and investment proposal questionnaire',
+    hi: function (c) { return c.n ? 'Hello, ' + c.n + '.' : 'Hello.'; },
+    intro: function () { return "To prepare your proposal I need a few details about your savings goals. It takes about 10 minutes. If you don't know something, leave it blank and we'll go through it together."; },
+    cont: ['Goal', 'What you are saving or investing for.'], cont2: ['Liquidity', 'When you might need the money.'], cont3: ['Risk', 'How much ups and downs you can accept.'],
+    prog: function (a, b) { return a + ' of ' + b + ' required answers'; }, req: 'This answer is needed.', optTag: '(optional)', choose: 'Choose…',
+    consent: function (c) { return 'I agree that ' + COMPANY + ' may use this information to prepare my savings and investment proposal. I can ask for it to be deleted at any time.'; },
+    consentErr: 'Tick the box to be able to send.', sendH: 'Send your answers', sendNote: function () { return 'Tapping will open a message with your answers. You only need to send it.'; },
+    wa: 'Send by WhatsApp', mail: 'Send by email', copy: 'Copy the summary', copied: 'Summary copied. Paste it into the chat or an email.', copyFail: 'Could not copy. Select the summary text and copy it by hand.',
+    sumH: 'See the summary that will be sent', missing: function (n) { return n + ' required answers are missing. They are marked in red.'; }, opened: "The message has been opened. If nothing appears, use “Copy the summary”.",
+    foot: function (c) { return c.p || c.e ? 'Contact: ' + [c.s, c.p, c.e].filter(Boolean).join(' · ') : ''; },
+    prevTxt: 'Preview: this is what the client will see.', prevExit: 'Back to the panel'
+  }
+};
+
+// ---------- estado ----------
+var CFG = null, V = {}, lang = 'es', preview = false, consent = false, tried = false;
+var STORE = 'cuestionario.ahorro.v1';
+function loadCfg() {
+  try { if (window.__CFG) return window.__CFG; } catch (e) {}
+  var m = /[#&]c=([^&]+)/.exec(location.hash || '');
+  if (m) { try { var o = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(m[1]))))); if (o && typeof o === 'object') return o; } catch (e) {} }
+  return null;
+}
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ V: V, consent: consent, lang: lang })); } catch (e) {} }
+function restore() { try { var s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s && s.V) { V = s.V; consent = !!s.consent; } } catch (e) {} }
+var cfgNow = function () { return CFG || { s: $('aSender') ? $('aSender').value : '', n: $('aName') ? $('aName').value : '', tr: $('aTrato') ? $('aTrato').value : 'tu' }; };
+function T(k) { return UI[lang][k]; }
+function lab(f) { var x = f[lang]; return typeof x === 'function' ? x(V) : x; }
+function oLab(o) { return o[lang]; }
+function el(tag, props, kids) { var e = document.createElement(tag); Object.keys(props || {}).forEach(function (k) { if (k === 'text') e.textContent = props[k]; else if (k === 'cls') e.className = props[k]; else e.setAttribute(k, props[k]); }); (kids || []).forEach(function (c) { e.appendChild(c); }); return e; }
+
+// ---------- construcción ----------
+var fieldEls = {};
+function build() {
+  var c = cfgNow(), form = $('form'); form.textContent = ''; fieldEls = {};
+  SECTIONS.forEach(function (s) {
+    var sec = el('section', { cls: 'sec' }); sec.appendChild(el('h2', { text: s[lang] }));
+    s.fields.forEach(function (f) {
+      var w = el('div', { cls: 'fld', id: 'w-' + f.id }), id = 'f-' + f.id, l = lab(f);
+      var head = f.t === 'radio' || f.t === 'check' ? el('div', { cls: 'lg', id: id + '-l' }) : el('label', { 'for': id });
+      head.appendChild(document.createTextNode(l)); if (f.opt) head.appendChild(el('span', { cls: 'opt', text: ' ' + T('optTag') }));
+      w.appendChild(head);
+      if (f.hint) w.appendChild(el('p', { cls: 'hint', id: id + '-h', text: f.hint[lang] }));
+      if (f.t === 'radio' || f.t === 'check') {
+        var box = el('div', { cls: 'choices', role: f.t === 'radio' ? 'radiogroup' : 'group', 'aria-labelledby': id + '-l' });
+        f.o.forEach(function (o, i) {
+          var inp = el('input', { type: f.t === 'radio' ? 'radio' : 'checkbox', name: id, id: id + '-' + i, value: o.v });
+          if (f.t === 'radio') inp.checked = V[f.id] === o.v; else inp.checked = (V[f.id] || []).indexOf(o.v) >= 0;
+          inp.addEventListener('change', function () {
+            if (f.t === 'radio') V[f.id] = o.v; else { var a = V[f.id] || []; a = a.filter(function (x) { return x !== o.v; }); if (inp.checked) a.push(o.v); V[f.id] = a; }
+            update();
+          });
+          box.appendChild(el('label', {}, [inp, el('span', { text: oLab(o) })]));
+        });
+        w.appendChild(box);
+      } else {
+        var inp2;
+        if (f.t === 'textarea') inp2 = el('textarea', { id: id, rows: '3' });
+        else if (f.t === 'select') {
+          inp2 = el('select', { id: id }); inp2.appendChild(el('option', { value: '', text: T('choose') }));
+          f.o.forEach(function (o) { inp2.appendChild(el('option', { value: o.v, text: oLab(o) })); });
+        } else {
+          inp2 = el('input', { id: id, type: f.t === 'number' ? 'number' : f.t });
+          if (f.t === 'number') { inp2.setAttribute('inputmode', 'decimal'); inp2.setAttribute('min', '0'); inp2.setAttribute('step', 'any'); }
+          if (f.t === 'tel') inp2.setAttribute('inputmode', 'tel'); if (f.ac) inp2.setAttribute('autocomplete', f.ac);
+        }
+        if (V[f.id] !== undefined) inp2.value = V[f.id];
+        inp2.addEventListener('input', function () { V[f.id] = inp2.value; update(); });
+        inp2.addEventListener('change', function () { V[f.id] = inp2.value; update(); });
+        w.appendChild(inp2);
+      }
+      w.appendChild(el('p', { cls: 'msg-err', id: id + '-e', hidden: '' }));
+      sec.appendChild(w); fieldEls[f.id] = w;
+    });
+    form.appendChild(sec);
+  });
+  // consentimiento y envío
+  var cs = el('label', { cls: 'consent', id: 'consentBox' }), cb = el('input', { type: 'checkbox', id: 'consent' });
+  cb.checked = consent; cb.addEventListener('change', function () { consent = cb.checked; update(); });
+  cs.appendChild(cb); cs.appendChild(el('span', { text: UI[lang].consent(c) })); form.appendChild(el('div', { cls: 'sec' }, [cs, el('p', { cls: 'msg-err', id: 'consent-e', hidden: '', text: T('consentErr') })]));
+  var sd = $('send'); sd.textContent = '';
+  sd.appendChild(el('h2', { text: T('sendH') })); sd.appendChild(el('p', { cls: 'hint', text: UI[lang].sendNote(c) }));
+  var wa = el('a', { cls: 'btn primary', id: 'bWa', href: '#', target: '_blank', rel: 'noopener', text: T('wa') });
+  var ml = el('a', { cls: 'btn', id: 'bMail', href: '#', text: T('mail') });
+  var cp = el('button', { cls: 'btn', type: 'button', id: 'bCopy', text: T('copy') });
+  sd.appendChild(wa); sd.appendChild(ml); sd.appendChild(cp);
+  sd.appendChild(el('p', { cls: 'status', id: 'status', role: 'status', 'aria-live': 'polite' }));
+  var det = el('details', { cls: 'sum' }); det.appendChild(el('summary', { text: T('sumH') })); det.appendChild(el('pre', { id: 'sumPre' })); sd.appendChild(det);
+  wa.addEventListener('click', function (e) { if (!guard(e)) return; setStatus(T('opened'), 'ok'); });
+  ml.addEventListener('click', function (e) { if (!guard(e)) return; setStatus(T('opened'), 'ok'); });
+  cp.addEventListener('click', function () { if (!guard()) return; copyText(summary()); });
+  // cabecera / saludo
+  $('brand').textContent = UI[lang].brand(c);
+  var hero = $('hero'); hero.textContent = '';
+  hero.appendChild(el('h1', { text: UI[lang].title })); hero.appendChild(el('p', { text: UI[lang].hi(c) + ' ' + UI[lang].intro(c) }));
+  var bl = el('div', { cls: 'blocks' });
+  [UI[lang].cont, UI[lang].cont2, UI[lang].cont3].forEach(function (b) { bl.appendChild(el('div', {}, [el('b', { text: b[0] }), document.createTextNode(b[1])])); });
+  hero.appendChild(bl);
+  $('foot').textContent = UI[lang].foot(c); $('cname').textContent = COMPANY; $('legal').textContent = COMPANY;
+  if (LOGO) { $('logo').src = LOGO; $('logo').hidden = false; }
+  $('lES').setAttribute('aria-pressed', String(lang === 'es')); $('lEN').setAttribute('aria-pressed', String(lang === 'en'));
+  document.documentElement.lang = lang;
+  update();
+}
+
+// ---------- lógica ----------
+function visible(f) { return !f.showIf || f.showIf(V); }
+function filled(f) { var v = V[f.id]; return Array.isArray(v) ? v.length > 0 : (v !== undefined && String(v).trim() !== ''); }
+function validField(f) {
+  if (!filled(f)) return false;
+  var v = String(V[f.id]).trim();
+  if (f.t === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  if (f.t === 'tel') return v.replace(/\D/g, '').length >= 9;
+  return true;
+}
+function required() { var r = []; SECTIONS.forEach(function (s) { s.fields.forEach(function (f) { if (f.req && visible(f)) r.push(f); }); }); return r; }
+function update() {
+  SECTIONS.forEach(function (s) { s.fields.forEach(function (f) { var w = fieldEls[f.id]; if (w) w.hidden = !visible(f); var l = w && w.querySelector('label[for], .lg'); if (l && f.t !== 'radio' && f.t !== 'check') { /* etiqueta dinámica */ var t = lab(f); if (l.firstChild && l.firstChild.nodeValue !== t) l.firstChild.nodeValue = t; } if (l && (f.t === 'radio' || f.t === 'check')) { var t2 = lab(f); if (l.firstChild && l.firstChild.nodeValue !== t2) l.firstChild.nodeValue = t2; } }); });
+  var rq = required(), ok = rq.filter(validField).length + (consent ? 1 : 0), tot = rq.length + 1;
+  $('progBar').style.width = Math.round(ok / tot * 100) + '%'; $('progTxt').textContent = T('prog')(ok, tot);
+  if (tried) markErrors();
+  var s = summary(); var pre = $('sumPre'); if (pre) pre.textContent = s;
+  var c = cfgNow();
+  var phone = (c.p || '').replace(/\D/g, ''); if (phone.indexOf('00') === 0) phone = phone.slice(2); if (phone.length === 9) phone = '34' + phone;
+  var wa = $('bWa'); if (wa) wa.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(s);
+  var ml = $('bMail'); if (ml) ml.href = 'mailto:' + (c.e || '') + '?subject=' + encodeURIComponent('Cuestionario ahorro e inversión' + (V.hName ? ' - ' + V.hName : '')) + '&body=' + encodeURIComponent(s);
+  save();
+}
+function markErrors() {
+  var first = null;
+  SECTIONS.forEach(function (sc) { sc.fields.forEach(function (f) {
+    var w = fieldEls[f.id]; if (!w) return;
+    var bad = !!(f.req && visible(f) && !validField(f)); w.classList.toggle('err', bad);
+    var e = $('f-' + f.id + '-e'); if (e) { e.hidden = !bad; e.textContent = bad ? T('req') : ''; }
+    if (bad && !first) first = w;
+  }); });
+  var cb = $('consentBox'), ce = $('consent-e'); if (cb) { cb.classList.toggle('err', !consent); ce.hidden = consent; if (!consent && !first) first = cb; }
+  return first;
+}
+function guard(e) {
+  tried = true; var first = markErrors();
+  if (first) { if (e && e.preventDefault) e.preventDefault(); var n = required().filter(function (f) { return !validField(f); }).length + (consent ? 0 : 1); setStatus(T('missing')(n), 'bad'); first.scrollIntoView({ behavior: 'smooth', block: 'center' }); return false; }
+  return true;
+}
+function setStatus(t, cls) { var s = $('status'); s.textContent = t; s.className = 'status ' + (cls || ''); }
+function copyText(t) {
+  var done = function () { setStatus(T('copied'), 'ok'); }, fail = function () { setStatus(T('copyFail'), 'bad'); $('sumPre').parentNode.open = true; };
+  try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done, fail); return; } } catch (e) {}
+  fail();
+}
+
+// ---------- resumen (siempre en español, para quien lo recibe) ----------
+function esVal(f, v) {
+  if (f.o) { var map = function (x) { var o = f.o.filter(function (q) { return q.v === x; })[0]; return o ? o.es : x; }; return Array.isArray(v) ? v.map(map).join(', ') : map(v); }
+  if (f.t === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v.split('-').reverse().join('/');
+  return String(v).trim();
+}
+function summary() {
+  var c = cfgNow(), L = [];
+  L.push('CUESTIONARIO AHORRO E INVERSIÓN' + (V.hName ? ' - ' + V.hName : ''));
+  L.push('Idioma del cliente: ' + (lang === 'en' ? 'inglés' : 'español') + (c.n ? ' | Preparado para: ' + c.n : ''));
+  SECTIONS.forEach(function (s) {
+    var lines = [];
+    s.fields.forEach(function (f) {
+      if (!visible(f) || !filled(f)) return;
+      var lbl = typeof f.es === 'function' ? f.es(V) : f.es, v = esVal(f, V[f.id]);
+      lines.push('- ' + lbl + ': ' + v);
+    });
+    if (lines.length) { L.push(''); L.push(s.es.toUpperCase()); lines.forEach(function (x) { L.push(x); }); }
+  });
+  L.push(''); L.push('Protección de datos: ' + (consent ? 'aceptada por el cliente' : 'pendiente'));
+  return L.join('\n');
+}
+
+// ---------- panel del agente ----------
+function b64(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))); }
+function agentCfg() {
+  var p = $('aPhone').value.trim(), m = $('aMail').value.trim(), s = $('aSender').value.trim();
+  if (!s || !p || !m) { $('aOut').textContent = 'Faltan el remitente, el móvil o el correo.'; return null; }
+  return { n: $('aName').value.trim(), tr: $('aTrato').value, l: $('aLang').value, s: s, p: p, e: m };
+}
+function setupAgent() {
+  $('agent').hidden = false;
+  $('agentHint').textContent = 'Rellena los datos de quien recibirá las respuestas y genera el enlace. Para que el enlace funcione, esta página debe estar publicada en una web (por ejemplo GitHub Pages). Si no, usa «Descargar para el cliente» y envía el archivo por WhatsApp.';
+  $('aLink').onclick = function () {
+    var c = agentCfg(); if (!c) return;
+    var base = location.href.split('#')[0], url = base + '#c=' + encodeURIComponent(b64(c));
+    $('aOut').textContent = ''; $('aOut').appendChild(document.createTextNode('Enlace: ')); $('aOut').appendChild(el('code', { text: url }));
+    if (/^file:/.test(base)) $('aOut').appendChild(document.createTextNode(' (Aviso: esta página está abierta desde un archivo; el enlace solo servirá cuando la publiques en una web.)'));
+    $('aLink').dataset.url = url;
+  };
+  $('aCopy').onclick = function () {
+    if (!$('aLink').dataset.url) $('aLink').onclick(); var u = $('aLink').dataset.url; if (!u) return;
+    try { navigator.clipboard.writeText(u).then(function () { $('aOut').textContent = 'Enlace copiado.'; }, function () { $('aOut').textContent = 'No se pudo copiar; selecciónalo arriba.'; }); } catch (e) { $('aOut').textContent = 'No se pudo copiar; selecciónalo arriba.'; }
+  };
+  $('aDown').onclick = function () {
+    var c = agentCfg(); if (!c) return;
+    try {
+      var html = SRC.replace('<head>', '<head>\n<script>window.__CFG=' + JSON.stringify(c).replace(/</g, '\\u003c') + ';<\/script>');
+      var blob = new Blob([html], { type: 'text/html' }), a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'cuestionario_ahorro' + (c.n ? '_' + c.n.replace(/[^\w\-]+/g, '_') : '') + '.html'; document.body.appendChild(a); a.click(); a.remove();
+      $('aOut').textContent = 'Archivo generado. Envíalo al cliente por WhatsApp (en iPhone, que lo abra con Safari).';
+    } catch (e) { $('aOut').textContent = 'Aquí no se pueden descargar archivos. Abre la página desde un navegador normal.'; }
+  };
+  $('aPrev').onclick = function () {
+    var c = agentCfg(); if (!c) return; CFG = c; preview = true; lang = c.l; V = {}; consent = false; tried = false;
+    $('agent').hidden = true; $('prevBar').hidden = false; $('prevTxt').textContent = UI[lang].prevTxt; $('prevExit').textContent = UI[lang].prevExit; build(); window.scrollTo(0, 0);
+  };
+  $('prevExit').onclick = function () { CFG = null; preview = false; $('prevBar').hidden = true; $('agent').hidden = false; V = {}; consent = false; tried = false; build(); window.scrollTo(0, 0); };
+}
+
+// ---------- arranque ----------
+CFG = loadCfg();
+if (CFG) { lang = CFG.l === 'en' ? 'en' : 'es'; restore(); }
+else { setupAgent(); }
+$('lES').onclick = function () { lang = 'es'; if (preview) { $('prevTxt').textContent = UI.es.prevTxt; $('prevExit').textContent = UI.es.prevExit; } build(); };
+$('lEN').onclick = function () { lang = 'en'; if (preview) { $('prevTxt').textContent = UI.en.prevTxt; $('prevExit').textContent = UI.en.prevExit; } build(); };
+['aName', 'aTrato', 'aSender'].forEach(function (i) { $(i).addEventListener('input', function () { if (!CFG) build(); }); });
+build();
+})();
+</script>
+</body></html>
